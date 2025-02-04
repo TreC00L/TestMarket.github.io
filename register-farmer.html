@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Registration - MarketFINAL</title>
+    <link rel="stylesheet" href="assets/css/register-farmer.css">
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
+    <script src="assets/js/firebase-config.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <button class="return-btn" onclick="window.location.href='login.html'">← Back to Login</button>
+        <h2>Register as a Farmer</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <input type="text" id="farmName" placeholder="Farm Name">
+        <input type="text" id="location" placeholder="Farm Location">
+        <div id="error-message" class="error"></div> <!-- Error message -->
+        <button onclick="registerFarmer()">Sign Up</button>
+        <p>Register as a <a href="register-client.html">Client</a> instead?</p>
+    </div>    
+
+    <script>
+        function registerFarmer() {
+            let email = document.getElementById("email").value.trim();
+            let password = document.getElementById("password").value.trim();
+            let farmName = document.getElementById("farmName").value.trim();
+            let location = document.getElementById("location").value.trim();
+            let errorMessage = document.getElementById("error-message");
+    
+            // Reset previous errors
+            errorMessage.style.display = "none";
+            errorMessage.innerText = "";
+    
+            if (!email) {
+                errorMessage.innerText = "Please enter your email.";
+                errorMessage.style.display = "block";
+                return;
+            }
+            if (!password) {
+                errorMessage.innerText = "Please enter your password.";
+                errorMessage.style.display = "block";
+                return;
+            }
+            if (!farmName) {
+                errorMessage.innerText = "Please enter your farm name.";
+                errorMessage.style.display = "block";
+                return;
+            }
+            if (!location) {
+                errorMessage.innerText = "Please enter your farm location.";
+                errorMessage.style.display = "block";
+                return;
+            }
+    
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    let user = userCredential.user;
+                    return firebase.firestore().collection("users").doc(user.uid).set({
+                        role: "farmer",
+                        email: email,
+                        farmName: farmName,
+                        location: location
+                    });
+                })
+                .then(() => {
+                    alert("Farmer account created successfully!");
+                    window.location.href = "dashboard.html";
+                })
+                .catch((error) => {
+                    errorMessage.innerText = error.message;
+                    errorMessage.style.display = "block";
+                });
+        }
+    </script>    
+    
+
+</body>
+</html>

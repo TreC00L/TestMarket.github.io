@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js"></script>
+  <!-- Firebase Authentication SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.4/firebase-auth.js"></script>
+  <!-- Link to the CSS file -->
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCqjdeG3840x6UdjyaEc0HhHO6jPzD0ldo",
+      authDomain: "marketproject-8ca0b.firebaseapp.com",
+      projectId: "marketproject-8ca0b",
+      storageBucket: "marketproject-8ca0b.appspot.com",
+      messagingSenderId: "29134617084",
+      appId: "1:29134617084:web:46a4e0c4b3b1dc54db1a79",
+      measurementId: "G-4YM1LZ253J"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Check if user is signed in
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in
+        document.getElementById('user-info').textContent = `Welcome, ${user.email}`;
+      } else {
+        // No user is signed in, redirect to login page
+        window.location.href = 'auth.html';
+      }
+    });
+
+    // Function to handle user logout
+    function logoutUser() {
+      auth.signOut().then(() => {
+        // Sign-out successful, redirect to login page
+        window.location.href = 'auth.html';
+      }).catch((error) => {
+        console.error('Logout error:', error.code, error.message);
+      });
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Dashboard</h1>
+      <button onclick="logoutUser()">Logout</button>
+    </nav>
+  </header>
+  <main>
+    <section>
+      <p id="user-info">Loading user information...</p>
+    </section>
+  </main>
+</body>
+</html>
